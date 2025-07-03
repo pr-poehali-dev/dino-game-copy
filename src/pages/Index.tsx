@@ -6,6 +6,7 @@ const Index = () => {
   const [gameOver, setGameOver] = useState(false);
   const [capibaraY, setCapibaraY] = useState(100);
   const [isJumping, setIsJumping] = useState(false);
+  const [velocityY, setVelocityY] = useState(0);
   const [obstacles, setObstacles] = useState<{ x: number; id: number }[]>([]);
   const [secretCode, setSecretCode] = useState("");
   const [showSecretCode, setShowSecretCode] = useState(false);
@@ -21,13 +22,39 @@ const Index = () => {
   const jump = useCallback(() => {
     if (!isJumping && !gameOver) {
       setIsJumping(true);
-      setCapibaraY((prev) => prev + JUMP_HEIGHT);
-      setTimeout(() => {
-        setCapibaraY((prev) => prev - JUMP_HEIGHT);
-        setIsJumping(false);
-      }, 500);
+      setVelocityY(8); // Начальная скорость вверх
     }
   }, [isJumping, gameOver]);
+
+  // Физика прыжка
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    const gravity = 0.5; // Гравитация
+    const groundLevel = 100; // Уровень земли
+
+    const physicsLoop = setInterval(() => {
+      setCapibaraY((prevY) => {
+        const newY = prevY + velocityY;
+        if (newY <= groundLevel) {
+          // Приземление
+          setIsJumping(false);
+          setVelocityY(0);
+          return groundLevel;
+        }
+        return newY;
+      });
+
+      setVelocityY((prevVelocity) => {
+        if (isJumping) {
+          return prevVelocity - gravity; // Применяем гравитацию
+        }
+        return 0;
+      });
+    }, 16);
+
+    return () => clearInterval(physicsLoop);
+  }, [gameStarted, gameOver, isJumping, velocityY]);
 
   // Обработка клавиш
   useEffect(() => {
@@ -149,6 +176,7 @@ const Index = () => {
     setScore(0);
     setCapibaraY(100);
     setIsJumping(false);
+    setVelocityY(0);
     setObstacles([]);
     setSecretCode("");
     setShowSecretCode(false);
