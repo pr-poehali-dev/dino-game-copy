@@ -70,9 +70,14 @@ const Index = () => {
           });
         } else {
           const lastObstacle = newObstacles[newObstacles.length - 1];
-          // Минимальное расстояние основано на скорости и времени прыжка (500мс)
-          const minDistance = gameSpeed * 35; // Минимальное расстояние
-          const maxDistance = gameSpeed * 55; // Максимальное расстояние
+          // Учитываем дальность прыжка: за 500мс прыжка копибара пролетит определенное расстояние
+          const jumpDistance = gameSpeed * 30; // Расстояние, которое пролетит копибара за время прыжка
+          const capibaraWidth = 50; // Ширина копибары
+          const obstacleWidth = OBSTACLE_WIDTH;
+
+          // Минимальное безопасное расстояние = дальность прыжка + запас
+          const minDistance = jumpDistance + capibaraWidth + obstacleWidth + 20; // +20 для запаса
+          const maxDistance = minDistance + gameSpeed * 25; // Максимальное расстояние
           const targetDistance =
             minDistance + Math.random() * (maxDistance - minDistance);
 
