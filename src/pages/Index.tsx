@@ -62,15 +62,26 @@ const Index = () => {
           .map((obs) => ({ ...obs, x: obs.x - gameSpeed }))
           .filter((obs) => obs.x > -OBSTACLE_WIDTH);
 
-        // Добавляем новые препятствия с рандомными интервалами
-        if (
-          newObstacles.length === 0 ||
-          newObstacles[newObstacles.length - 1].x < 400 + Math.random() * 400
-        ) {
+        // Добавляем новые препятствия с учетом скорости
+        if (newObstacles.length === 0) {
           newObstacles.push({
             x: 800,
             id: Date.now(),
           });
+        } else {
+          const lastObstacle = newObstacles[newObstacles.length - 1];
+          // Минимальное расстояние основано на скорости и времени прыжка (500мс)
+          const minDistance = gameSpeed * 35; // Минимальное расстояние
+          const maxDistance = gameSpeed * 55; // Максимальное расстояние
+          const targetDistance =
+            minDistance + Math.random() * (maxDistance - minDistance);
+
+          if (lastObstacle.x < 800 - targetDistance) {
+            newObstacles.push({
+              x: 800,
+              id: Date.now(),
+            });
+          }
         }
 
         return newObstacles;
