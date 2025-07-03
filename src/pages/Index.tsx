@@ -20,11 +20,11 @@ const Index = () => {
 
   // Прыжок копибары
   const jump = useCallback(() => {
-    if (!isJumping && !gameOver) {
+    if (!isJumping && !gameOver && capibaraY === 100) {
       setIsJumping(true);
       setVelocityY(15); // Увеличенная начальная скорость
     }
-  }, [isJumping, gameOver]);
+  }, [isJumping, gameOver, capibaraY]);
 
   // Физика прыжка
   useEffect(() => {
