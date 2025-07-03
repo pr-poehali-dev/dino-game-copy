@@ -21,9 +21,9 @@ const Index = () => {
   const jump = useCallback(() => {
     if (!isJumping && !gameOver) {
       setIsJumping(true);
-      setCapibaraY((prev) => prev - JUMP_HEIGHT);
+      setCapibaraY((prev) => prev + JUMP_HEIGHT);
       setTimeout(() => {
-        setCapibaraY((prev) => prev + JUMP_HEIGHT);
+        setCapibaraY((prev) => prev - JUMP_HEIGHT);
         setIsJumping(false);
       }, 500);
     }
@@ -62,10 +62,10 @@ const Index = () => {
           .map((obs) => ({ ...obs, x: obs.x - gameSpeed }))
           .filter((obs) => obs.x > -OBSTACLE_WIDTH);
 
-        // Добавляем новые препятствия
+        // Добавляем новые препятствия с рандомными интервалами
         if (
           newObstacles.length === 0 ||
-          newObstacles[newObstacles.length - 1].x < 600
+          newObstacles[newObstacles.length - 1].x < 400 + Math.random() * 400
         ) {
           newObstacles.push({
             x: 800,
@@ -79,8 +79,8 @@ const Index = () => {
       // Увеличиваем счет медленнее
       setScore((prev) => prev + 0.1);
 
-      // Увеличиваем скорость игры
-      setGameSpeed((prev) => Math.min(prev + 0.005, 8));
+      // Увеличиваем скорость игры заметно
+      setGameSpeed((prev) => Math.min(prev + 0.02, 12));
     }, 16);
 
     return () => clearInterval(gameLoop);
@@ -91,13 +91,26 @@ const Index = () => {
     if (!gameStarted || gameOver) return;
 
     const capibaraX = 100;
-    const capibaraBottom = 400 - capibaraY - CAPIBARA_HEIGHT;
+    const capibaraWidth = 50;
+    const capibaraBottom = capibaraY;
+    const capibaraTop = capibaraY + CAPIBARA_HEIGHT;
 
     obstacles.forEach((obstacle) => {
+      // Проверка пересечения по X
+      const obstacleLeft = obstacle.x;
+      const obstacleRight = obstacle.x + OBSTACLE_WIDTH;
+      const capibaraLeft = capibaraX;
+      const capibaraRight = capibaraX + capibaraWidth;
+
+      // Проверка пересечения по Y
+      const obstacleBottom = GROUND_HEIGHT;
+      const obstacleTop = GROUND_HEIGHT + OBSTACLE_HEIGHT;
+
       if (
-        obstacle.x < capibaraX + 50 &&
-        obstacle.x + OBSTACLE_WIDTH > capibaraX &&
-        capibaraBottom < OBSTACLE_HEIGHT
+        capibaraRight > obstacleLeft &&
+        capibaraLeft < obstacleRight &&
+        capibaraTop > obstacleBottom &&
+        capibaraBottom < obstacleTop
       ) {
         setGameOver(true);
       }
