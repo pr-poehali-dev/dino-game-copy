@@ -4,7 +4,7 @@ const Index = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
-  const [capibaraY, setCapibaraY] = useState(120);
+  const [capibaraY, setCapibaraY] = useState(100);
   const [isJumping, setIsJumping] = useState(false);
   const [obstacles, setObstacles] = useState<{ x: number; id: number }[]>([]);
   const [secretCode, setSecretCode] = useState("");
@@ -118,7 +118,7 @@ const Index = () => {
     setGameStarted(false);
     setGameOver(false);
     setScore(0);
-    setCapibaraY(120);
+    setCapibaraY(100);
     setIsJumping(false);
     setObstacles([]);
     setSecretCode("");
@@ -152,7 +152,7 @@ const Index = () => {
           className={`absolute transition-all duration-300 ${isJumping ? "animate-bounce" : ""}`}
           style={{
             left: "100px",
-            bottom: `${400 - capibaraY}px`,
+            bottom: `${capibaraY}px`,
             width: "50px",
             height: "60px",
           }}
