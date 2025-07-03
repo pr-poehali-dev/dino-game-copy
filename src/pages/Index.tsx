@@ -22,7 +22,7 @@ const Index = () => {
   const jump = useCallback(() => {
     if (!isJumping && !gameOver) {
       setIsJumping(true);
-      setVelocityY(8); // Начальная скорость вверх
+      setVelocityY(15); // Увеличенная начальная скорость
     }
   }, [isJumping, gameOver]);
 
@@ -30,7 +30,7 @@ const Index = () => {
   useEffect(() => {
     if (!gameStarted || gameOver) return;
 
-    const gravity = 0.5; // Гравитация
+    const gravity = 0.8; // Увеличенная гравитация
     const groundLevel = 100; // Уровень земли
 
     const physicsLoop = setInterval(() => {
