@@ -35,9 +35,11 @@ const Index = () => {
 
     const physicsLoop = setInterval(() => {
       setCapibaraY((prevY) => {
+        if (!isJumping) return prevY;
+
         const newY = prevY + velocityY;
         if (newY <= groundLevel) {
-          // Приземление
+          // Приземление - останавливаем все движение
           setIsJumping(false);
           setVelocityY(0);
           return groundLevel;
@@ -45,12 +47,9 @@ const Index = () => {
         return newY;
       });
 
-      setVelocityY((prevVelocity) => {
-        if (isJumping) {
-          return prevVelocity - gravity; // Применяем гравитацию
-        }
-        return 0;
-      });
+      if (isJumping) {
+        setVelocityY((prevVelocity) => prevVelocity - gravity);
+      }
     }, 16);
 
     return () => clearInterval(physicsLoop);
