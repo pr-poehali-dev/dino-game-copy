@@ -22,38 +22,13 @@ const Index = () => {
   const jump = useCallback(() => {
     if (!isJumping && !gameOver && capibaraY === 100) {
       setIsJumping(true);
-      setVelocityY(15); // Увеличенная начальная скорость
+      setCapibaraY(100 + 80); // Простой прыжок на фиксированную высоту
+      setTimeout(() => {
+        setCapibaraY(100); // Возвращаем на землю
+        setIsJumping(false);
+      }, 400); // Длительность прыжка
     }
   }, [isJumping, gameOver, capibaraY]);
-
-  // Физика прыжка
-  useEffect(() => {
-    if (!gameStarted || gameOver) return;
-
-    const gravity = 0.8; // Увеличенная гравитация
-    const groundLevel = 100; // Уровень земли
-
-    const physicsLoop = setInterval(() => {
-      setCapibaraY((prevY) => {
-        if (!isJumping) return prevY;
-
-        const newY = prevY + velocityY;
-        if (newY <= groundLevel) {
-          // Приземление - останавливаем все движение
-          setIsJumping(false);
-          setVelocityY(0);
-          return groundLevel;
-        }
-        return newY;
-      });
-
-      if (isJumping) {
-        setVelocityY((prevVelocity) => prevVelocity - gravity);
-      }
-    }, 16);
-
-    return () => clearInterval(physicsLoop);
-  }, [gameStarted, gameOver, isJumping, velocityY]);
 
   // Обработка клавиш
   useEffect(() => {
