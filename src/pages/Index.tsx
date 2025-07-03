@@ -182,7 +182,7 @@ const Index = () => {
           }}
         >
           <img
-            src="https://cdn.poehali.dev/files/bd8d70f8-0c64-42f6-9ce7-05423e8dcbc4.png"
+            src="https://cdn.poehali.dev/files/b0db2baa-3cfa-4ec6-8f80-dfd641c54101.png"
             alt="Копибара"
             className="w-full h-full object-contain"
           />
