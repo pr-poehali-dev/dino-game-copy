@@ -4,7 +4,7 @@ const Index = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
-  const [capibaraY, setCapibaraY] = useState(200);
+  const [capibaraY, setCapibaraY] = useState(120);
   const [isJumping, setIsJumping] = useState(false);
   const [obstacles, setObstacles] = useState<{ x: number; id: number }[]>([]);
   const [secretCode, setSecretCode] = useState("");
@@ -13,7 +13,7 @@ const Index = () => {
 
   const GROUND_HEIGHT = 100;
   const CAPIBARA_HEIGHT = 60;
-  const JUMP_HEIGHT = 120;
+  const JUMP_HEIGHT = 80;
   const OBSTACLE_WIDTH = 20;
   const OBSTACLE_HEIGHT = 40;
 
@@ -76,12 +76,12 @@ const Index = () => {
         return newObstacles;
       });
 
-      // Увеличиваем счет
-      setScore((prev) => prev + 1);
+      // Увеличиваем счет медленнее
+      setScore((prev) => prev + 0.1);
 
       // Увеличиваем скорость игры
       setGameSpeed((prev) => Math.min(prev + 0.005, 8));
-    }, 50);
+    }, 16);
 
     return () => clearInterval(gameLoop);
   }, [gameStarted, gameOver, gameSpeed]);
@@ -106,7 +106,7 @@ const Index = () => {
 
   // Секретный код при достижении 100 очков
   useEffect(() => {
-    if (score >= 100 && !secretCode) {
+    if (Math.floor(score) >= 100 && !secretCode) {
       // Имитация "бекенда" - здесь код спрятан
       const hiddenCode = "SPacEKopUbarich";
       setSecretCode(hiddenCode);
@@ -118,7 +118,7 @@ const Index = () => {
     setGameStarted(false);
     setGameOver(false);
     setScore(0);
-    setCapibaraY(200);
+    setCapibaraY(120);
     setIsJumping(false);
     setObstacles([]);
     setSecretCode("");
@@ -144,7 +144,7 @@ const Index = () => {
       <div className="relative w-full max-w-4xl h-96 bg-white border-2 border-gray-300 overflow-hidden">
         {/* Счет */}
         <div className="absolute top-4 right-4 text-xl font-bold text-gray-700">
-          {score.toString().padStart(5, "0")}
+          {Math.floor(score).toString().padStart(5, "0")}
         </div>
 
         {/* Копибара */}
@@ -208,7 +208,9 @@ const Index = () => {
               <h2 className="text-3xl font-bold mb-4 text-gray-800">
                 Игра окончена!
               </h2>
-              <p className="text-xl text-gray-600 mb-4">Счет: {score}</p>
+              <p className="text-xl text-gray-600 mb-4">
+                Счет: {Math.floor(score)}
+              </p>
               {secretCode && (
                 <div className="mb-4 p-4 bg-yellow-100 rounded-lg">
                   <div className="text-lg font-bold text-yellow-800">
